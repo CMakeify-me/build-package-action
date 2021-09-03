@@ -1,0 +1,20 @@
+name: Build Package
+description: Build Debian packages using Docker image
+
+inputs:
+
+  docker_image:
+    description: Name of the docker image to use
+    required: true
+
+runs:
+  using: 'composite'
+
+  steps:
+    - uses: actions/checkout@v2
+
+    - uses: CMakeify-me/docker-run-action@master
+      with:
+        docker_image: ${{ inputs.docker_image }}
+        command: /bin/bash ${{ github.action_path }}/build-package.sh
+        docker_run_options: '-v ${{ github.action_path }}:${{ github.action_path }}'
