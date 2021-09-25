@@ -77,7 +77,7 @@ echo '::endgroup::'
 # BEGIN Building packages
 echo '::group::Building packages'
 
-DEB_BUILD_OPTIONS="parallel=$(nproc) nocheck" dpkg-buildpackage -b -nc -uc
+DEB_BUILD_OPTIONS="parallel=$(nproc) ${DEB_BUILD_OPTIONS} nocheck" dpkg-buildpackage -b -nc -uc
 
 echo '::endgroup::'
 # END Building packages
