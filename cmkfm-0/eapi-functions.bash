@@ -21,7 +21,7 @@ function require()
     # Try to locate the module and source it
     local -r paths=( \
         "${GITHUB_WORKSPACE}/${module}.cmkfmlib" \
-        "$(dirname $0)/${module}.cmkfmlib" \
+        "$(dirname $0)/cmkfmlibs/${module}.cmkfmlib" \
       )
     local location
     for location in "${paths[@]}"; do
