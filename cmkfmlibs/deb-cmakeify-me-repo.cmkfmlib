@@ -3,7 +3,7 @@
 # The module to add CMakeify Me Debian repo
 #
 
-if [[ -z ${CMKFM_REPO_USER} || -z $CMKFM_REPO_PASS} ]]; then
+if [[ -z ${CMKFM_REPO_USER} || -z ${CMKFM_REPO_PASS} ]]; then
     die '`CMKFM_REPO_USER` or `CMKFM_REPO_PASS` is not set'
 fi
 
@@ -14,17 +14,20 @@ umask 077
 set +x
 
 cat <<EOF >.wgetrc
-user=$CMKFM_REPO_USER
-password=$CMKFM_REPO_PASS
+user=${CMKFM_REPO_USER}
+password=${CMKFM_REPO_PASS}
 EOF
 
 cat <<EOF >/etc/apt/auth.conf
 machine deb.cmakeify.me
-login $CMKFM_REPO_USER
-password $CMKFM_REPO_PASS
+login ${CMKFM_REPO_USER}
+password ${CMKFM_REPO_PASS}
 EOF
 
 set -x
+pwd
+ls -la
+ls -la /etc/apt
 
 umask ${dcr_old_umask}
 
