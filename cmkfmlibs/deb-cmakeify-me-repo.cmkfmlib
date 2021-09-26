@@ -9,6 +9,9 @@ fi
 
 declare -r dcr_old_umask=$(umask)
 
+# BEGIN Configuring CMakeify Me Debian repo
+echo '::group::Configuring CMakeify Me Debian repo'
+
 umask 077
 
 cat <<EOF >/etc/wgetrc
@@ -27,5 +30,8 @@ umask ${dcr_old_umask}
 apt-key add $(v1_option) <(wget -O - https://deb.cmakeify.me/cmakeify-me-repo.key)
 
 echo 'deb https://deb.cmakeify.me focal main' > /etc/apt/sources.list.d/cmakeify-me.list
+
+echo '::endgroup::'
+# END Configuring CMakeify Me Debian repo
 
 # kate: hl bash;
