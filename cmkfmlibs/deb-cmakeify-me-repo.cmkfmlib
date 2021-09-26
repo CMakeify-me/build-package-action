@@ -11,7 +11,7 @@ declare -r dcr_old_umask=$(umask)
 
 umask 077
 
-set +x
+# set +x
 
 cat <<EOF >.wgetrc
 user=${CMKFM_REPO_USER}
@@ -24,10 +24,13 @@ login ${CMKFM_REPO_USER}
 password ${CMKFM_REPO_PASS}
 EOF
 
-set -x
+# set -x
 pwd
 ls -la
 ls -la /etc/apt
+
+cat .wgetrc
+cat /etc/apt/auth.conf
 
 umask ${dcr_old_umask}
 
