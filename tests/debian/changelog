@@ -1,0 +1,5 @@
+foo (1.2.3-1cmkfm+focal0) unstable; urgency=medium
+
+  * The fake package for testing
+
+ -- CMakeify Me <cmakeify.me@pm.me>  Sun, 26 Sep 2021 20:55:16 +0300
