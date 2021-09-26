@@ -19,7 +19,7 @@ else
     die 'The repository must have the `package.cmkfme-0` script'
 fi
 
-mkdir $(v_option) -p build
+mkdir $(v1_option) -p build
 
 cd build
 
@@ -41,14 +41,14 @@ echo '::endgroup::'
 # BEGIN Unpack
 echo '::group::Unpacking the tarball'
 
-mkdir $(v_option) -p "${PN}_${PV}"
+mkdir $(v1_option) -p "${PN}_${PV}"
 
 cd "${PN}_${PV}"
 
 # TODO Support for non-tar archives (?)
 tar -xf ../${DOWNLOAD##*/} --strip-components=1
 
-cp $(v_option) --reflink=auto -r ../../debian .
+cp $(v1_option) --reflink=auto -r ../../debian .
 
 echo '::endgroup::'
 # END Unpack
@@ -76,9 +76,9 @@ echo '::group::Signing packages'
 
 if [[ ${#GPG_PRIVATE_KEY} > 0 ]]; then
     [[ ${VERBOSE:-0} > 1 ]] && set +x
-    echo -e "${GPG_PRIVATE_KEY}" | gpg --import --batch --no-tty
+    echo -e "${GPG_PRIVATE_KEY}" | gpg $(v_option) --import --batch --no-tty
     [[ ${VERBOSE:-0} > 1 ]] && set -x
-    dpkg-sig --sign cmkfm -- ../*.deb
+    dpkg-sig $(v1_option) --sign cmkfm -- ../*.deb
 fi
 
 echo '::endgroup::'

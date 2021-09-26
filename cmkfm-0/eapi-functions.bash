@@ -9,6 +9,12 @@ function v_option()
     [[ ${VERBOSE} > 1 ]] && echo "-$(eval printf 'v%.0s' {1..${vrb_cnt}})"
 }
 
+function v1_option()
+{
+    local -r long_option=$1
+    [[ ${VERBOSE} > 0 ]] && { [[ ${long_option} == long ]] && echo '--verbose' || echo '-v'; } || true
+}
+
 function die()
 {
     local -r message="$1"
@@ -42,5 +48,6 @@ function require()
 
 # The module exports
 export -f v_option
+export -f v1_option
 export -f die
 export -f require

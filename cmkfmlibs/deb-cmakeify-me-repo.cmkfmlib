@@ -24,7 +24,7 @@ EOF
 
 umask ${dcr_old_umask}
 
-apt-key add <(wget -O - https://deb.cmakeify.me/cmakeify-me-repo.key)
+apt-key add $(v1_option) <(wget -O - https://deb.cmakeify.me/cmakeify-me-repo.key)
 
 echo 'deb https://deb.cmakeify.me focal main' > /etc/apt/sources.list.d/cmakeify-me.list
 
