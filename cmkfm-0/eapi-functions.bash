@@ -41,6 +41,6 @@ function require()
 }
 
 # The module exports
-export -f verbose_option
+export -f v_option
 export -f die
 export -f require
