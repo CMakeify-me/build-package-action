@@ -7,6 +7,10 @@ inputs:
     description: Name of the docker image to use
     required: true
 
+  verbose:
+    description: Turn bash trace ON
+    default: 0
+
 runs:
   using: 'composite'
 
@@ -19,4 +23,4 @@ runs:
         command: /bin/bash ${{ github.action_path }}/build-package.sh
         docker_run_options: '-v ${{ github.action_path }}:${{ github.action_path }}'
         envvars: 'CMKFM_REPO_USER CMKFM_REPO_PASS GPG_PRIVATE_KEY'
-        trace: true
+        verbose: ${{ inputs.verbose }}

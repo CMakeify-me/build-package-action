@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-set -x
+[[ ${VERBOSE:-0} > 1 ]] && set -x
 
 if [[ ! -d debian ]]; then
     die 'The `debian/` directory not found in the repository root'
@@ -19,7 +19,7 @@ else
     die 'The repository must have the `package.cmkfme-0` script'
 fi
 
-mkdir -pv build
+mkdir $(v_option) -p build
 
 cd build
 
@@ -41,14 +41,14 @@ echo '::endgroup::'
 # BEGIN Unpack
 echo '::group::Unpacking the tarball'
 
-mkdir -pv "${PN}_${PV}"
+mkdir $(v_option) -p "${PN}_${PV}"
 
 cd "${PN}_${PV}"
 
 # TODO Support for non-tar archives (?)
 tar -xf ../${DOWNLOAD##*/} --strip-components=1
 
-cp --reflink=auto -vr ../../debian .
+cp $(v_option) --reflink=auto -r ../../debian .
 
 echo '::endgroup::'
 # END Unpack
@@ -75,9 +75,9 @@ echo '::endgroup::'
 echo '::group::Signing packages'
 
 if [[ ${#GPG_PRIVATE_KEY} > 0 ]]; then
-    set +x
+    [[ ${VERBOSE:-0} > 1 ]] && set +x
     echo -e "${GPG_PRIVATE_KEY}" | gpg --import --batch --no-tty
-    set -x
+    [[ ${VERBOSE:-0} > 1 ]] && set -x
     dpkg-sig --sign cmkfm -- ../*.deb
 fi
 

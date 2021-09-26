@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-set -x
+[[ ${VERBOSE:-0} > 2 ]] && set -x
 
 . "$(dirname $0)/cmkfm-0/eapi-functions.bash"
 

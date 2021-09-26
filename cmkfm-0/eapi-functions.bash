@@ -3,6 +3,12 @@
 # cmkfm-0 EAPI functions
 #
 
+function v_option()
+{
+    local -r vrb_cnt=$(( ${VERBOSE} - 1 ))
+    [[ ${VERBOSE} > 1 ]] && echo "-$(eval printf 'v%.0s' {1..${vrb_cnt}})"
+}
+
 function die()
 {
     local -r message="$1"
@@ -35,5 +41,6 @@ function require()
 }
 
 # The module exports
+export -f verbose_option
 export -f die
 export -f require
