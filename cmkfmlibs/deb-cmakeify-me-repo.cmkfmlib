@@ -11,9 +11,7 @@ declare -r dcr_old_umask=$(umask)
 
 umask 077
 
-# set +x
-
-cat <<EOF >.wgetrc
+cat <<EOF >/etc/wgetrc
 user=${CMKFM_REPO_USER}
 password=${CMKFM_REPO_PASS}
 EOF
@@ -23,14 +21,6 @@ machine deb.cmakeify.me
 login ${CMKFM_REPO_USER}
 password ${CMKFM_REPO_PASS}
 EOF
-
-# set -x
-pwd
-ls -la
-ls -la /etc/apt
-
-cat .wgetrc
-cat /etc/apt/auth.conf
 
 umask ${dcr_old_umask}
 
