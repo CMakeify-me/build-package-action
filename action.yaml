@@ -19,3 +19,4 @@ runs:
         command: /bin/bash ${{ github.action_path }}/build-package.sh
         docker_run_options: '-v ${{ github.action_path }}:${{ github.action_path }}'
         envvars: 'CMKFM_REPO_USER CMKFM_REPO_PASS GPG_PRIVATE_KEY'
+        trace: true
