@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# The module to add CMakeify Me Debian repo
+#
+
+if [[ -z ${CMKFM_REPO_USER} || -z ${CMKFM_REPO_PASS} ]]; then
+    die '`CMKFM_REPO_USER` or `CMKFM_REPO_PASS` is not set'
+fi
+
+declare -r dcr_old_umask=$(umask)
+
+umask 077
+
+cat <<EOF >/etc/wgetrc
+user=${CMKFM_REPO_USER}
+password=${CMKFM_REPO_PASS}
+EOF
+
+cat <<EOF >/etc/apt/auth.conf
+machine deb.cmakeify.me
+login ${CMKFM_REPO_USER}
+password ${CMKFM_REPO_PASS}
+EOF
+
+umask ${dcr_old_umask}
+
+apt-key add $(v1_option) <(wget -O - https://deb.cmakeify.me/cmakeify-me-repo.key)
+
+echo 'deb https://deb.cmakeify.me focal main' > /etc/apt/sources.list.d/cmakeify-me.list
+
+# kate: hl bash;

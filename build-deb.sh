@@ -1,21 +1,14 @@
 #!/bin/bash
 
 set -e
-set -x
-
-function die()
-{
-    local -r message="$1"
-    echo "ERROR: ${message}" 1>&2
-    exit 1
-}
+[[ ${VERBOSE:-0} > 1 ]] && set -x
 
 if [[ ! -d debian ]]; then
     die 'The `debian/` directory not found in the repository root'
 fi
 
-# BEGIN Downloading the release tarball
-echo '::group::Downloading the release tarball'
+# BEGIN Prepare
+echo '::group::Prepare'
 
 declare -r PN=$(head -n1 debian/changelog | sed 's,\([^ ]\+\).*,\1,')
 declare -r PV=$(head -n1 debian/changelog | sed 's,^[^(]\+(\([0-9]\+\(\.[0-9]\+\)*\(-rc[0-9]\)\?\).*,\1,')
@@ -26,9 +19,15 @@ else
     die 'The repository must have the `package.cmkfme-0` script'
 fi
 
-mkdir -pv build
+mkdir $(v1_option) -p build
 
 cd build
+
+echo '::endgroup::'
+# END Prepare
+
+# BEGIN Downloading the release tarball
+echo '::group::Downloading the release tarball'
 
 if [[ -n ${DOWNLOAD} ]]; then
     wget -T 30 ${DOWNLOAD}
@@ -42,27 +41,17 @@ echo '::endgroup::'
 # BEGIN Unpack
 echo '::group::Unpacking the tarball'
 
-mkdir -pv "${PN}_${PV}"
+mkdir $(v1_option) -p "${PN}_${PV}"
 
 cd "${PN}_${PV}"
 
 # TODO Support for non-tar archives (?)
 tar -xf ../${DOWNLOAD##*/} --strip-components=1
 
-cp --reflink=auto -vr ../../debian .
+cp $(v1_option) --reflink=auto -r ../../debian .
 
 echo '::endgroup::'
 # END Unpack
-
-# BEGIN Prepare
-echo '::group::Prepare'
-
-if [[ $(type -t src_prepare) == 'function' ]]; then
-    src_prepare
-fi
-
-echo '::endgroup::'
-# END Prepare
 
 # BEGIN Pre-installing build dependencies
 echo '::group::Pre-installing build dependencies'
@@ -86,10 +75,10 @@ echo '::endgroup::'
 echo '::group::Signing packages'
 
 if [[ ${#GPG_PRIVATE_KEY} > 0 ]]; then
-    set +x
-    echo -e "${GPG_PRIVATE_KEY}" | gpg --import --batch --no-tty
-    set -x
-    dpkg-sig --sign cmkfm -- ../*.deb
+    [[ ${VERBOSE:-0} > 1 ]] && set +x
+    echo -e "${GPG_PRIVATE_KEY}" | gpg $(v_option) --import --batch --no-tty
+    [[ ${VERBOSE:-0} > 1 ]] && set -x
+    dpkg-sig $(v1_option) --sign cmkfm -- ../*.deb
 fi
 
 echo '::endgroup::'

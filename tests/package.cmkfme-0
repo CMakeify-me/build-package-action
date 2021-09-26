@@ -1,0 +1,10 @@
+# A dummy unit testing package
+
+DOWNLOAD="https://foo.bar"
+
+[[ ${PN} == 'foo' ]] || die FAILED
+[[ ${PV} == '1.2.3' ]] || die FAILED
+
+require tests/unit-test
+
+# kate: hl bash;
