@@ -3,19 +3,12 @@
 set -e
 set -x
 
-function die()
-{
-    local -r message="$1"
-    echo "ERROR: ${message}" 1>&2
-    exit 1
-}
-
 if [[ ! -d debian ]]; then
     die 'The `debian/` directory not found in the repository root'
 fi
 
-# BEGIN Downloading the release tarball
-echo '::group::Downloading the release tarball'
+# BEGIN Prepare
+echo '::group::Prepare'
 
 declare -r PN=$(head -n1 debian/changelog | sed 's,\([^ ]\+\).*,\1,')
 declare -r PV=$(head -n1 debian/changelog | sed 's,^[^(]\+(\([0-9]\+\(\.[0-9]\+\)*\(-rc[0-9]\)\?\).*,\1,')
@@ -29,6 +22,12 @@ fi
 mkdir -pv build
 
 cd build
+
+echo '::endgroup::'
+# END Prepare
+
+# BEGIN Downloading the release tarball
+echo '::group::Downloading the release tarball'
 
 if [[ -n ${DOWNLOAD} ]]; then
     wget -T 30 ${DOWNLOAD}
@@ -53,16 +52,6 @@ cp --reflink=auto -vr ../../debian .
 
 echo '::endgroup::'
 # END Unpack
-
-# BEGIN Prepare
-echo '::group::Prepare'
-
-if [[ $(type -t src_prepare) == 'function' ]]; then
-    src_prepare
-fi
-
-echo '::endgroup::'
-# END Prepare
 
 # BEGIN Pre-installing build dependencies
 echo '::group::Pre-installing build dependencies'
